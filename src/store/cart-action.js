@@ -1,5 +1,6 @@
 import { uiActions } from "./ui-slice";
-import { cartActions } from './cart-slice'
+import { cartActions } from "./cart-slice";
+
 export const fetchCartData = () => {
   return async (dispatch) => {
     const fetchData = async () => {
@@ -7,16 +8,16 @@ export const fetchCartData = () => {
         "https://food-order-app-4a38c-default-rtdb.firebaseio.com/cart.json"
       );
       if (!response.ok) {
-        throw new Error("Sending cart data failed");
+        throw new Error("Fetching cart data failed");
       }
       const data = await response.json();
       return data;
     };
     try {
-        const cartData = await fetchData();
-        dispatch(cartActions.replaceCart(cartData))
-    } catch(error) {
-
+      const cartData = await fetchData();
+      dispatch(cartActions.replaceCart(cartData));
+    } catch (error) {
+      
     }
   };
 };
@@ -34,14 +35,16 @@ export const sendCartData = (cartData) => {
         "https://food-order-app-4a38c-default-rtdb.firebaseio.com/cart.json",
         {
           method: "PUT",
-          body: JSON.stringify(cartData),
+          body: JSON.stringify({
+            items: cartData.items,
+            totalQuantity: cartData.totalQuantity,
+          }),
         }
       );
 
       if (!response.ok) {
         throw new Error("Sending cart data failed");
       }
-
       dispatch(
         uiActions.showNotification({
           status: "success",
