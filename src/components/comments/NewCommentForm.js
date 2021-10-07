@@ -4,12 +4,13 @@ import classes from './NewCommentForm.module.css';
 
 const NewCommentForm = (props) => {
   const commentTextRef = useRef();
-
   const submitFormHandler = (event) => {
     event.preventDefault();
-
+    const commentData = commentTextRef.current.value.trim();
+    if (commentData === '') return;
     // optional: Could validate here
-
+    props.onAddComment({quoteId: props.quoteId,  commentData})
+    commentTextRef.current.value='';
     // send comment to server
   };
 
